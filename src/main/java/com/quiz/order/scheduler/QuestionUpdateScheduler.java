@@ -1,12 +1,13 @@
 package com.quiz.order.scheduler;
 
+import com.quiz.order.models.AppStatus;
+import com.quiz.order.models.Question;
 import com.quiz.order.repository.AppStatusRepository;
 import com.quiz.order.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
-import com.quiz.order.models.Question;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -68,10 +69,15 @@ public class QuestionUpdateScheduler {
                     Question nextQuestion = inactiveQuestions.get(0);
                     questionRepository.activateNextInactiveQuestion(nextQuestion.getQuestionId());
                 } else {
-			// Stop the scheduler if there are no more inactive questions
-			stopScheduler();
-		}
+                    // Stop the scheduler and set appStatValue to 'N' if there are no more inactive questions
+                    stopScheduler();
+                    AppStatus appStatus = appStatusRepository.findById(1L)
+                            .orElseThrow(() -> new RuntimeException("AppStatus with id 1 not found"));
+                    appStatus.setAppStatValue('N');
+                    appStatusRepository.save(appStatus);
+                }
             }
         }
     }
 }
+
