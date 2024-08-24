@@ -11,7 +11,7 @@
 	<groupId>com.quiz</groupId>
 	<artifactId>quick-order</artifactId>
 	<version>0.0.1</version>
-	<name>quiz</name>
+	<name>api</name>
 	<description>Quiz - Quick Order</description>
 	<properties>
 		<java.version>17</java.version>
