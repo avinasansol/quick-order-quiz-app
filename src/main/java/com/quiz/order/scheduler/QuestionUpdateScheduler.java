@@ -53,7 +53,7 @@ public class QuestionUpdateScheduler {
     }
 
     public void updateQuestionTimes() {
-        System.out.println("I am still executing");
+        System.out.println("Scheduler is executing");
         questionRepository.decrementTimeLeftForActiveQuestions(Arrays.asList('P', 'Y', 'C'));
         questionRepository.activatePendingQuestions();
         questionRepository.completeActiveQuestions();
@@ -67,7 +67,10 @@ public class QuestionUpdateScheduler {
                 if (!inactiveQuestions.isEmpty()) {
                     Question nextQuestion = inactiveQuestions.get(0);
                     questionRepository.activateNextInactiveQuestion(nextQuestion.getQuestionId());
-                }
+                } else {
+			// Stop the scheduler if there are no more inactive questions
+			stopScheduler();
+		}
             }
         }
     }
