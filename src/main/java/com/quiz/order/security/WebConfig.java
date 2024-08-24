@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                //.allowedOrigins("http://localhost:3000") // Allow your React app's URL
+                //.allowedOrigins("https://quick-order-quiz-mwkbvoons-avinash-kumar-jhas-projects.vercel.app") // Allow your React app's URL
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
