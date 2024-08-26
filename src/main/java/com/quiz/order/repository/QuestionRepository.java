@@ -14,7 +14,9 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query("SELECT q FROM Question q WHERE q.active IN :statuses ORDER BY " +
-            "CASE q.active WHEN 'P' THEN 1 WHEN 'Y' THEN 2 WHEN 'C' THEN 3 END")
+        "CASE q.active WHEN 'P' THEN 1 WHEN 'Y' THEN 2 WHEN 'C' THEN 3 END, " +
+        "CASE WHEN q.active = 'C' THEN q.questionId END DESC, " +
+        "CASE WHEN q.active <> 'C' THEN q.questionId END ASC")
     List<Question> findOrderedQuestions(@Param("statuses") List<Character> statuses);
 
     @Modifying
@@ -34,7 +36,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("UPDATE Question q SET q.active = 'C', q.timeLeft = 10 WHERE q.active = 'Y' AND q.timeLeft = 0")
     void completeActiveQuestions();
 
-    @Query("SELECT q FROM Question q WHERE q.active = 'N'")
+    @Query("SELECT q FROM Question q WHERE q.active = 'N' ORDER BY q.questionId ASC")
     List<Question> findInactiveQuestions();
 
     @Modifying
