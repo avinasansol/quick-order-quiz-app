@@ -41,6 +41,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Question q SET q.active = 'P', q.timeLeft = 30 WHERE q.questionId = :questionId")
+    @Query("UPDATE Question q SET q.active = 'P', q.timeLeft = 45 WHERE q.questionId = :questionId")
     void activateNextInactiveQuestion(@Param("questionId") Long questionId);
 }
