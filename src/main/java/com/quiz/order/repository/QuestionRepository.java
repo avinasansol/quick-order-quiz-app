@@ -27,7 +27,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     // New query to update 'P' to 'Y' where timeLeft is 0
     @Modifying
     @Transactional
-    @Query("UPDATE Question q SET q.active = 'Y', q.timeLeft = 90 WHERE q.active = 'P' AND q.timeLeft = 0")
+    @Query("UPDATE Question q SET q.active = 'Y', q.timeLeft = 60 WHERE q.active = 'P' AND q.timeLeft = 0")
     void activatePendingQuestions();
 
     // New query to update 'Y' to 'C' where timeLeft is 0
@@ -41,6 +41,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Question q SET q.active = 'P', q.timeLeft = 25 WHERE q.questionId = :questionId")
+    @Query("UPDATE Question q SET q.active = 'P', q.timeLeft = 30 WHERE q.questionId = :questionId")
     void activateNextInactiveQuestion(@Param("questionId") Long questionId);
 }
