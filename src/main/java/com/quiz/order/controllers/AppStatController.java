@@ -4,6 +4,7 @@ import com.quiz.order.models.AppStatus;
 import com.quiz.order.models.UserRoles;
 import com.quiz.order.repository.AppStatusRepository;
 import com.quiz.order.repository.UserRolesRepository;
+import com.quiz.order.repository.QuestionRepository;
 import com.quiz.order.scheduler.QuestionUpdateScheduler;
 import com.quiz.order.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/appstat")
@@ -31,6 +33,9 @@ public class AppStatController {
 
     @Autowired
     private QuestionUpdateScheduler questionUpdateScheduler;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @PostMapping("/")
     public ResponseEntity<?> updateAppStat(@RequestBody AppStatRequest appStatRequest, Authentication authentication) {
@@ -55,10 +60,18 @@ public class AppStatController {
 
         if (appStatRequest.getActivate() != null) {
             if (appStatRequest.getActivate().equalsIgnoreCase("Y")) {
+            
                 appStatus.setAppStatValue('Y');
                 appStatusRepository.save(appStatus);
+                
+            	boolean noActivePendingOrIncompleteQuestions = questionRepository.findOrderedQuestions(Arrays.asList('Y', 'P', 'N')).isEmpty();
+		if (noActivePendingOrIncompleteQuestions) {
+			questionRepository.resetAllQuestions();
+		}
+            	
                 questionUpdateScheduler.startScheduler();
                 return ResponseEntity.ok(appStatus.getAppStatValue());
+                
             } else if (appStatRequest.getActivate().equalsIgnoreCase("N")) {
                 appStatus.setAppStatValue('N');
                 appStatusRepository.save(appStatus);
