@@ -48,6 +48,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     // Reset all questions to Incomplete
     @Modifying
     @Transactional
-    @Query("UPDATE Question q SET q.active = 'N' WHERE 1")
+    @Query("UPDATE Question q SET q.active = 'N'")
     void resetAllQuestions();
 }
